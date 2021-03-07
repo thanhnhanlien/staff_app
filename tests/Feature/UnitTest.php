@@ -5,11 +5,15 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Config;
 use App\Models\User;
 use App\Models\Department;
 use App\Models\Team;
 use App\Models\TeamUser;
 use Illuminate\Database\Eloquent\Factories\Sequence;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Response as FacadeResponse;
+
 
 class UnitTest extends TestCase
 {
@@ -49,6 +53,26 @@ class UnitTest extends TestCase
             ))
             ->create();
         $response = $this->get('/');
+
+        $response->assertStatus(200);
+    }
+
+    /**
+    * Get all employees.
+    *
+    * @return void
+    */
+    public function testGetEmployees()
+    {
+        $headers = ['Accept' => 'application/json'];
+
+        $user = User::where('email', Config::get('api.apiEmail'))->first();
+        if (!is_null($user)) {
+            $token = JWTAuth::fromUser($user);
+            $headers['Authorization'] = 'Bearer '.$token;
+        }
+
+        $response = $this->get(Config::get('app.url') . '/api/auth/employees', $headers);
 
         $response->assertStatus(200);
     }
