@@ -16,7 +16,7 @@ class UsersTableSeeder extends Seeder
     {
         $directorEmail = 'director@gmail.com';
         $director = User::where('email', '=', $directorEmail)->first();
-        if (!$director) {
+        if (empty($director)) {
             User::create([
     			'email' => $directorEmail,
     			'password' => bcrypt('director'),
