@@ -14,14 +14,18 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        User::create([
-			'email' => 'director@gmail.com',
-			'password' => bcrypt('director'),
-			'name' => 'Director',
-			'phone' => '0946907587',
-			'token' => 'Str::random(60)',
-			'director' => 1,
-			'active' => 1
-		]);
+        $directorEmail = 'director@gmail.com';
+        $director = User::where('email', '=', $directorEmail)->first();
+        if (!$director) {
+            User::create([
+    			'email' => $directorEmail,
+    			'password' => bcrypt('director'),
+    			'name' => 'Director',
+    			'phone' => '0946907587',
+    			'token' => '',
+    			'director' => 1,
+    			'active' => 1
+    		]);
+        }
     }
 }
